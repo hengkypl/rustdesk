@@ -413,10 +413,11 @@ class _GeneralState extends State<_General> {
       controller: scrollController,
       children: [
         if (!isWeb) service(),
-        theme(),
-        _Card(title: 'Language', children: [language()]),
-        if (!isWeb) hwcodec(),
-        if (!isWeb) audio(context),
+        // Elang: kartu Tema, Bahasa, Hardware Codec, dan Audio sengaja tidak
+        // ditampilkan sesuai desain yang disetujui - tema dikunci, bahasa
+        // dikunci ke Indonesia (src/elang.rs), codec & audio dibiarkan
+        // otomatis. Fungsinya sengaja TIDAK dihapus supaya diff terhadap
+        // upstream tetap kecil dan gampang dibalik kalau berubah pikiran.
         if (!isWeb) record(context),
         if (!isWeb) WaylandCard(),
         other()

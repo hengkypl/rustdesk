@@ -42,10 +42,27 @@ pub fn apply_brand() {
         Value::String(RENDEZVOUS_PUB_KEY.to_string()),
     );
 
+    // Bahasa dikunci ke Indonesia. src/lang/id.rs sudah disediakan RustDesk,
+    // jadi tidak ada yang perlu diterjemahkan sendiri.
+    defaults.insert("lang".to_string(), Value::String("id".to_string()));
+
+    // Tab Jaringan disembunyikan: alamat server, relay, dan kunci sudah
+    // dipatok di atas, jadi kolom itu hanya membingungkan pengguna.
+    defaults.insert(
+        "hide-network-settings".to_string(),
+        Value::String("Y".to_string()),
+    );
+
     let mut data: HashMap<String, Value> = HashMap::new();
     data.insert(
         "app-name".to_string(),
         Value::String(APP_NAME.to_string()),
+    );
+    // Kunci di luar "default-settings"/"override-settings" masuk ke HARD_SETTINGS.
+    // Akun RustDesk tidak dipakai produk ini, jadi tab Akun dimatikan.
+    data.insert(
+        "disable-account".to_string(),
+        Value::String("Y".to_string()),
     );
     data.insert("default-settings".to_string(), Value::Object(defaults));
 
