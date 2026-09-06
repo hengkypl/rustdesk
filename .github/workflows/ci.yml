@@ -16,6 +16,9 @@ on:
   push:
     branches:
       - master
+      # branch rebrand Elang: pakai CI ini sebagai pemeriksa kompilasi cepat
+      # (cargo build Linux) sebelum build Windows penuh yang makan waktu lama.
+      - elang
     paths-ignore:
       - ".github/**"
       - "docs/**"
