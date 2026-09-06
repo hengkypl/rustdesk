@@ -15,6 +15,11 @@ src/version.rs
 cert.pfx
 *.bak
 *png
+# Logo client bermerek Elang: dikecualikan dari aturan *png di atas, kalau tidak
+# berkasnya diam-diam tidak ikut ter-commit dan build kehilangan logonya.
+!flutter/assets/logo.png
+!flutter/assets/logo_light.png
+!flutter/assets/logo_dark.png
 *svg
 *jpg
 sciter.dll
