@@ -64,6 +64,14 @@ pub fn apply_brand() {
         "disable-account".to_string(),
         Value::String("Y".to_string()),
     );
+    // Tulisan "Didukung oleh RustDesk" di pojok kiri atas beranda dimatikan:
+    // produk ini dijual sebagai Elang Remote Desktop, bukan pemasangan RustDesk.
+    // Sakelar ini memang disediakan upstream (lihat `loadPowered` di
+    // flutter/lib/common.dart), jadi tidak ada kode Dart yang perlu diubah.
+    data.insert(
+        "hide-powered-by-me".to_string(),
+        Value::String("Y".to_string()),
+    );
     data.insert("default-settings".to_string(), Value::Object(defaults));
 
     crate::common::apply_custom_client_config(data);

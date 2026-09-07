@@ -35,6 +35,12 @@ const double kElangAdMinHeight = 118;
 /// ruang yang tersisa harus jadi milik daftar sesi, bukan iklan.
 const double kElangAdHideBelow = 330;
 
+/// Logo Elang yang ikut dibundel di dalam .exe (sudah terdaftar lewat
+/// `assets/` di pubspec). Sengaja aset lokal, bukan diunduh dari server
+/// iklan: logo mereknya harus tetap tampil walau server sedang tak terjangkau
+/// atau iklannya diambil dari cache.
+const String kElangLogoAsset = 'assets/logo.png';
+
 class _ElangAd {
   final String title;
   final String subtitle;
@@ -232,9 +238,34 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
     final tight = height < 150;
     return Padding(
       key: key,
-      padding: EdgeInsets.fromLTRB(26, tight ? 12 : 18, 18, tight ? 12 : 18),
+      padding: EdgeInsets.fromLTRB(18, tight ? 12 : 18, 18, tight ? 12 : 18),
       child: Row(
         children: [
+          // Cap merek, meniru chip putih di halaman /banner: logo gelap di atas
+          // gradien gelap tidak akan terbaca, jadi diberi alas putih.
+          Container(
+            margin: EdgeInsets.only(right: tight ? 14 : 18),
+            padding: EdgeInsets.symmetric(
+                horizontal: tight ? 8 : 10, vertical: tight ? 6 : 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.34),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Image.asset(
+              kElangLogoAsset,
+              height: tight ? 34 : 46,
+              fit: BoxFit.contain,
+              // Aset hilang tidak boleh menjatuhkan seluruh panel iklan.
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
