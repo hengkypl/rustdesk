@@ -222,6 +222,12 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => _open(ad.linkUrl),
+          // Tema RustDesk memasang hoverColor yang BURAM (light: #E0E0E0,
+          // dark: #2D2E35 - keduanya alpha 255), jadi InkWell bawaan menutup
+          // rapat gradien iklan dengan blok abu-abu begitu kursor lewat.
+          // Ditimpa lapisan putih tipis supaya iklannya sekadar menyala.
+          hoverColor: Colors.white.withOpacity(.10),
+          highlightColor: Colors.transparent,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 620),
             transitionBuilder: _transition,
