@@ -4,7 +4,12 @@ project(rustdesk LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "rustdesk")
+# Nama ini menentukan nama .exe hasil build dan HARUS sama dengan
+# `elang::APP_NAME`: skrip pemasang menyusun "{app_name}.exe" untuk
+# taskkill, shortcut, dan registry. Kalau berbeda, pemasangan menghasilkan
+# shortcut yang menunjuk berkas tak ada, dan XCOPY melewati berkas yang
+# masih terkunci proses lama karena taskkill-nya tidak pernah cocok.
+set(BINARY_NAME "Elang")
 
 # Explicitly opt into modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
