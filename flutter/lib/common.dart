@@ -3021,7 +3021,13 @@ int versionCmp(String v1, String v2) {
 }
 
 String getWindowName({WindowType? overrideType}) {
-  final name = bind.mainGetAppNameSync();
+  // Judul jendela memakai nama tampilan ("Elang Remote Desktop"), bukan nama
+  // internal ("ElangRD") yang dipakai untuk nama berkas, folder instalasi, dan
+  // nama service. mainGetAppNameSync() sengaja tidak diubah karena
+  // install_page.dart memakainya untuk menyusun path instalasi.
+  final displayName = bind.mainGetHardOption(key: 'app-display-name');
+  final name =
+      displayName.isEmpty ? bind.mainGetAppNameSync() : displayName;
   switch (overrideType ?? kWindowType) {
     case WindowType.Main:
       return name;

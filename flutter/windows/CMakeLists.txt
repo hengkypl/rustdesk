@@ -9,7 +9,7 @@ project(rustdesk LANGUAGES CXX)
 # taskkill, shortcut, dan registry. Kalau berbeda, pemasangan menghasilkan
 # shortcut yang menunjuk berkas tak ada, dan XCOPY melewati berkas yang
 # masih terkunci proses lama karena taskkill-nya tidak pernah cocok.
-set(BINARY_NAME "Elang")
+set(BINARY_NAME "ElangRD")
 
 # Explicitly opt into modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

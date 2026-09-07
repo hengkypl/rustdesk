@@ -16,9 +16,19 @@ use hbb_common::config::keys;
 use serde_json::Value;
 use std::collections::HashMap;
 
-/// Nama internal aplikasi. `lang::translate` menyulih kata "RustDesk" di seluruh
-/// teks antarmuka dengan nama ini, jadi harus enak dibaca di tengah kalimat.
-pub const APP_NAME: &str = "Elang";
+/// Nama internal aplikasi: nama berkas .exe, folder instalasi, nama service
+/// Windows, folder konfigurasi, dan skema URL sekaligus. WAJIB cocok dengan
+/// [a-zA-Z0-9-]+ (lihat `platform::windows::validate_install_app_name`) -
+/// garis bawah DITOLAK, jadi "Elang_RD" tidak bisa dipakai.
+///
+/// Nama .exe hasil build wajib sama persis dengan nilai ini; lihat BINARY_NAME
+/// di flutter/windows/CMakeLists.txt dan komentar di sana.
+pub const APP_NAME: &str = "ElangRD";
+
+/// Nama merek untuk dibaca manusia. Dipakai di teks antarmuka dan judul
+/// jendela, supaya kalimatnya berbunyi "Elang Remote Desktop" dan bukan
+/// "ElangRD" yang kaku. Bebas spasi karena tidak pernah jadi nama berkas.
+pub const DISPLAY_NAME: &str = "Elang Remote Desktop";
 
 /// Server rendezvous/relay milik sendiri (hbbs/hbbr di box PBX).
 pub const RENDEZVOUS_SERVER: &str = "103.150.84.246";
@@ -53,6 +63,16 @@ pub fn apply_brand() {
         Value::String("Y".to_string()),
     );
 
+    // Tulisan "Didukung oleh RustDesk" di pojok kiri atas beranda dimatikan.
+    // WAJIB di sini, bukan sebagai kunci tingkat-atas: kunci tingkat-atas masuk
+    // ke HARD_SETTINGS, sedangkan `loadPowered` membacanya lewat
+    // `mainGetBuildinOption` yang hanya melihat BUILTIN_SETTINGS - dan hanya
+    // kunci di KEYS_BUILDIN_SETTINGS yang dialirkan ke sana.
+    defaults.insert(
+        "hide-powered-by-me".to_string(),
+        Value::String("Y".to_string()),
+    );
+
     let mut data: HashMap<String, Value> = HashMap::new();
     data.insert(
         "app-name".to_string(),
@@ -64,13 +84,11 @@ pub fn apply_brand() {
         "disable-account".to_string(),
         Value::String("Y".to_string()),
     );
-    // Tulisan "Didukung oleh RustDesk" di pojok kiri atas beranda dimatikan:
-    // produk ini dijual sebagai Elang Remote Desktop, bukan pemasangan RustDesk.
-    // Sakelar ini memang disediakan upstream (lihat `loadPowered` di
-    // flutter/lib/common.dart), jadi tidak ada kode Dart yang perlu diubah.
+    // Nama tampilan dibaca lewat HARD_SETTINGS oleh `get_app_display_name()`
+    // (teks antarmuka) dan `mainGetHardOption` (judul jendela).
     data.insert(
-        "hide-powered-by-me".to_string(),
-        Value::String("Y".to_string()),
+        "app-display-name".to_string(),
+        Value::String(DISPLAY_NAME.to_string()),
     );
     data.insert("default-settings".to_string(), Value::Object(defaults));
 

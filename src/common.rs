@@ -1061,6 +1061,24 @@ pub fn get_app_name() -> String {
     hbb_common::config::APP_NAME.read().unwrap().clone()
 }
 
+/// Nama merek untuk dibaca manusia (teks antarmuka & judul jendela), dipatok
+/// lewat kunci HARD_SETTINGS "app-display-name". Kalau kosong, jatuh kembali ke
+/// nama internal sehingga perilaku upstream tidak berubah sama sekali.
+#[inline]
+pub fn get_app_display_name() -> String {
+    let name = hbb_common::config::HARD_SETTINGS
+        .read()
+        .unwrap()
+        .get("app-display-name")
+        .cloned()
+        .unwrap_or_default();
+    if name.is_empty() {
+        get_app_name()
+    } else {
+        name
+    }
+}
+
 #[inline]
 pub fn is_rustdesk() -> bool {
     hbb_common::config::APP_NAME.read().unwrap().eq("RustDesk")
