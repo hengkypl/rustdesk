@@ -60,23 +60,29 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   Widget build(BuildContext context) {
     super.build(context);
     final isIncomingOnly = bind.isIncomingOnly();
-    // Elang: panel iklan membentang penuh di bawah kedua panel kerja, sesuai
-    // desain yang disetujui. Kalau server iklan tak terjangkau atau belum ada
-    // iklan aktif, widget-nya mengecil jadi nol - tampilan kembali seperti asli.
+    // Elang: panel iklan HANYA menempati dasar panel kanan, tidak membentang
+    // sampai ke bawah sidebar. Sidebar dibiarkan setinggi penuh supaya
+    // peringatan merah (Security Alert) dan help card di dalamnya tidak
+    // terdorong keluar dari area gulir. Kalau server iklan tak terjangkau atau
+    // belum ada iklan aktif, widget-nya mengecil jadi nol - tampilan kembali
+    // seperti aslinya.
     return _buildBlock(
-        child: Column(
+        child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildLeftPane(context),
-              if (!isIncomingOnly) const VerticalDivider(width: 1),
-              if (!isIncomingOnly) Expanded(child: buildRightPane(context)),
-            ],
+        buildLeftPane(context),
+        if (!isIncomingOnly) const VerticalDivider(width: 1),
+        if (!isIncomingOnly)
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) => Column(
+                children: [
+                  Expanded(child: buildRightPane(context)),
+                  ElangAdBanner(availableHeight: constraints.maxHeight),
+                ],
+              ),
+            ),
           ),
-        ),
-        const ElangAdBanner(),
       ],
     ));
   }

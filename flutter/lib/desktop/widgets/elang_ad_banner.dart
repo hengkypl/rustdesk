@@ -24,7 +24,16 @@ const String kElangAdsUrl = 'https://iklan.elangapp.net/api/ads.json';
 /// muncul di client paling lama selang waktu ini, tanpa aplikasi ditutup.
 const Duration kElangAdsRefresh = Duration(minutes: 5);
 
+/// Tinggi ideal panel iklan. Dipakai apa adanya kalau panel kanan lapang.
 const double kElangAdHeight = 172;
+
+/// Batas bawah: di bawah ini teks iklan mulai terpotong, lebih baik iklannya
+/// disembunyikan daripada tampil rusak.
+const double kElangAdMinHeight = 118;
+
+/// Panel kanan yang lebih pendek dari ini tidak diberi iklan sama sekali -
+/// ruang yang tersisa harus jadi milik daftar sesi, bukan iklan.
+const double kElangAdHideBelow = 330;
 
 class _ElangAd {
   final String title;
@@ -69,7 +78,12 @@ class _ElangAd {
 }
 
 class ElangAdBanner extends StatefulWidget {
-  const ElangAdBanner({Key? key}) : super(key: key);
+  /// Tinggi ruang yang tersedia untuk panel kanan. Diisi lewat LayoutBuilder
+  /// oleh beranda; iklan mengambil paling banyak sepertiganya supaya kolom
+  /// "Kontrol Desktop Jarak Jauh" tetap nyaman di jendela 800x600.
+  final double? availableHeight;
+
+  const ElangAdBanner({Key? key, this.availableHeight}) : super(key: key);
 
   @override
   State<ElangAdBanner> createState() => _ElangAdBannerState();
@@ -178,9 +192,16 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
   @override
   Widget build(BuildContext context) {
     if (_ads.isEmpty) return const SizedBox.shrink();
+    final avail = widget.availableHeight;
+    if (avail != null && avail < kElangAdHideBelow) {
+      return const SizedBox.shrink();
+    }
+    final height = avail == null
+        ? kElangAdHeight
+        : max(kElangAdMinHeight, min(kElangAdHeight, avail / 3));
     final ad = _ads[_index];
     return Container(
-      height: kElangAdHeight,
+      height: height,
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -198,17 +219,20 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 620),
             transitionBuilder: _transition,
-            child: _slide(ad, key: ValueKey(_index)),
+            child: _slide(ad, height, key: ValueKey(_index)),
           ),
         ),
       ),
     );
   }
 
-  Widget _slide(_ElangAd ad, {required Key key}) {
+  Widget _slide(_ElangAd ad, double height, {required Key key}) {
+    // Panel yang pendek: judul dikecilkan dan subjudul dipangkas barisnya,
+    // supaya tidak ada teks yang tertimpa garis bawah kotak.
+    final tight = height < 150;
     return Padding(
       key: key,
-      padding: const EdgeInsets.fromLTRB(26, 18, 18, 18),
+      padding: EdgeInsets.fromLTRB(26, tight ? 12 : 18, 18, tight ? 12 : 18),
       child: Row(
         children: [
           Expanded(
@@ -221,19 +245,19 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
                     ad.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: tight ? 20 : 24,
                       fontWeight: FontWeight.w800,
                       height: 1.15,
                     ),
                   ),
                 if (ad.subtitle.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(top: 6),
+                    padding: EdgeInsets.only(top: tight ? 4 : 6),
                     child: Text(
                       ad.subtitle,
-                      maxLines: 3,
+                      maxLines: tight ? 2 : 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white.withOpacity(.93),
@@ -274,7 +298,7 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
                   ad.photoUrl,
-                  height: kElangAdHeight - 44,
+                  height: height - (tight ? 30 : 44),
                   fit: BoxFit.contain,
                   // Gambar gagal dimuat tidak boleh merusak tata letak iklan.
                   errorBuilder: (_, __, ___) => const SizedBox.shrink(),
