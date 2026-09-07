@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "Elang Remote Desktop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "ElangRD" "\0"
-            VALUE "LegalCopyright", "Copyright © 2026 Laksana Elang. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright © 2026 Laksana Elang. Berbasis RustDesk (AGPL-3.0)." "\0"
             VALUE "OriginalFilename", "ElangRD.exe" "\0"
             VALUE "ProductName", "Elang Remote Desktop" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

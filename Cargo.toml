@@ -236,9 +236,10 @@ webrtc-sctp = { git = "https://github.com/rustdesk-org/webrtc", rev = "b221f13b1
 LegalCopyright = "Copyright © 2026 Laksana Elang. Berbasis RustDesk (AGPL-3.0)."
 ProductName = "Elang Remote Desktop"
 FileDescription = "Elang Remote Desktop"
-# Nama berkas hasil build masih rustdesk.exe (nama crate & workflow merujuk itu).
-# Diganti bersamaan saat langkah pengemasan rilis nanti.
-OriginalFilename = "rustdesk.exe"
+# Untuk build Flutter, artefak cargo dari crate ini adalah librustdesk.dll,
+# bukan .exe - metadata berkas .exe ada di flutter/windows/runner/Runner.rc
+# dan metadata pembungkus portabel di libs/portable/Cargo.toml.
+OriginalFilename = "librustdesk.dll"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"

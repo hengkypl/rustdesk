@@ -221,7 +221,9 @@ class _ElangAdBannerState extends State<ElangAdBanner> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => _open(ad.linkUrl),
+          // Iklan tanpa tautan tidak boleh berlagak bisa diklik: onTap null
+          // membuat kursor tetap panah biasa dan efek hover tidak muncul.
+          onTap: ad.linkUrl.isEmpty ? null : () => _open(ad.linkUrl),
           // Tema RustDesk memasang hoverColor yang BURAM (light: #E0E0E0,
           // dark: #2D2E35 - keduanya alpha 255), jadi InkWell bawaan menutup
           // rapat gradien iklan dengan blok abu-abu begitu kursor lewat.

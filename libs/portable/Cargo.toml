@@ -30,7 +30,7 @@ native-windows-gui = {version = "1.0", default-features = false, features = ["an
 # ElangRD.exe di dalamnya (flutter/windows/runner/Runner.rc), jadi keduanya
 # harus diubah bersamaan.
 [package.metadata.winres]
-LegalCopyright = "Copyright © 2026 Laksana Elang. All rights reserved."
+LegalCopyright = "Copyright © 2026 Laksana Elang. Berbasis RustDesk (AGPL-3.0)."
 CompanyName = "Laksana Elang"
 ProductName = "Elang Remote Desktop"
 OriginalFilename = "elang-remote-desktop.exe"
