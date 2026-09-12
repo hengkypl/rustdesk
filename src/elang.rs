@@ -73,6 +73,17 @@ pub fn apply_brand() {
         Value::String("Y".to_string()),
     );
 
+    // Password sekali-pakai berisi ANGKA SAJA. Kombinasi huruf besar/kecil
+    // menyusahkan pengguna saat mendiktekan lewat telepon/WA, padahal tujuan
+    // produk ini justru untuk meremote orang awam. Dipasang sebagai
+    // "override-settings" supaya terkunci (tidak bisa dimatikan dari menu);
+    // panjangnya tetap mengikuti `temporary-password-length` (bawaan 6 digit).
+    let mut overrides = serde_json::Map::new();
+    overrides.insert(
+        keys::OPTION_ALLOW_NUMERNIC_ONE_TIME_PASSWORD.to_string(),
+        Value::String("Y".to_string()),
+    );
+
     let mut data: HashMap<String, Value> = HashMap::new();
     data.insert(
         "app-name".to_string(),
@@ -91,6 +102,7 @@ pub fn apply_brand() {
         Value::String(DISPLAY_NAME.to_string()),
     );
     data.insert("default-settings".to_string(), Value::Object(defaults));
+    data.insert("override-settings".to_string(), Value::Object(overrides));
 
     crate::common::apply_custom_client_config(data);
 }
